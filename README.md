@@ -108,7 +108,11 @@ The entire system relies on a simple, consistent serial protocol:
 
 project/
 │
+
 ├── arduino_code.ino
+
 ├── python_code.py
+
 ├── attendance_log.csv
+
 └── README.md
