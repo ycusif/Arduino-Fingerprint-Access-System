@@ -108,7 +108,7 @@ The entire system relies on a simple, consistent serial protocol:
 
 project/
 │
-├── arduino_code.ino        // Arduino firmware for fingerprint, LCD, buzzer, serial output
-├── python_code.py          // Python listener for serial, Google Sheets logging, WhatsApp automation
-├── attendance_log.csv      // Auto-generated attendance log
-└── README.md               // Project documentation
+├── arduino_code.ino
+├── python_code.py
+├── attendance_log.csv
+└── README.md
