@@ -105,16 +105,3 @@ Potential areas for future development (as suggested in `biometric presentation.
 ## ⚖️ License
 
 This project is licensed under the **MIT License**.
-
-## 📂 Project Structure
-
-project/
-│
-
-├── arduino_code.ino
-
-├── python_code.py
-
-├── attendance_log.csv
-
-└── README.md
