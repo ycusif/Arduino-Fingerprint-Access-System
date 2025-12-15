@@ -1,108 +1,110 @@
-# 🔒 Fingerprint Access and Attendance System (Arduino + Python)
+## 📁 Repository Structure and File Naming
 
-## 🌟 Overview
+To make your repository clean and easy to navigate, use the following structure and file names:
 
-This project implements a fully functional attendance and access control system using an Arduino microcontroller, an optical fingerprint sensor (like the R307/R503), a keypad, and an I²C LCD.
+```
+Smart-Biometric-Attendance-System/
+├── Arduino-Code/
+│   └── Biometric_Attendance_Arduino.ino   # Arduino C++ Code
+├── Python-Automation/
+│   └── biometric_automation.py            # Python Script
+├── Docs/
+│   └── biometric_presentation.pdf         # (Your uploaded presentation file)
+├── logs/
+│   └── attendance_log.csv                 # Attendance records (ignored by Git usually)
+├── .gitignore                             # Recommended to exclude logs/
+└── README.md                              # Main project documentation
+```
 
-A critical feature of this system is its ability to communicate a successful authentication event to a connected PC via the serial port. The companion Python script, running on the PC, listens for this event and automatically triggers two actions:
+-----
 
-1.  Logs the user's entry time into a local CSV file (`attendance_log.csv`).
-2.  Sends an immediate notification (including the user ID and timestamp) via **WhatsApp** using the `pywhatkit` library.
+## ✨ Project Overview
 
-## 🛠️ Hardware Requirements
+This is an integrated biometric attendance solution combining hardware reliability with software automation. It utilizes an **Arduino** microcontroller and an **R307 Fingerprint Sensor** for authentication, paired with a **Python** script that sends real-time attendance notifications via **WhatsApp** and maintains a digital log.
 
-| Component | Description |
-| :--- | :--- |
-| **Microcontroller** | Arduino Uno, Nano, or Mega. |
-| **Fingerprint Sensor** | R307, R503, or similar optical module. |
-| **Display** | 16x2 I²C LCD Display. |
-| **Input** | 4x4 Matrix Keypad. |
-| **Feedback** | 2x LEDs (Red/Green) and a Buzzer. |
-| **Wiring** | Wires, Breadboard, and power supply. |
-| **PC Connection** | USB cable for communication with the Python script. |
+This hybrid system aims to enhance security, reduce human error, and provide secure, automated logging, ideal for institutions monitoring attendance. (As noted in `biometric presentation.pdf`, Page 3)
 
-## 🔌 Wiring Diagram
+### Key Features
 
-Connect your components as specified in the Arduino code. 
+  * **Biometric Authentication:** Secure user identification using the R307 Fingerprint Sensor.
+  * **Real-time Notifications:** Automated WhatsApp messages sent to an administrator upon successful check-in.
+  * **Admin Interface:** A PIN-protected (default: `1234`) 4x4 Keypad interface for enrolling and deleting user IDs.
+  * **Digital Logging:** All check-in events are timestamped and saved in a local `attendance_log.csv` file.
 
-### Arduino Pinout Summary:
+## ⚙️ Hardware Components
 
-| Component | Arduino Pin(s) | Function |
+| Component | Description | Connection (Arduino Uno) |
 | :--- | :--- | :--- |
-| **Fingerprint Sensor** | Pin 2 (RX) & Pin 3 (TX) | Software Serial Communication |
-| **Green LED** | Pin 4 (OUTPUT) | Access Granted |
-| **Red LED** | Pin 5 (OUTPUT) | Access Denied |
-| **Buzzer** | Pin 6 (OUTPUT) | Audio Feedback |
-| **Keypad Rows** | Pins 7, 8, 9, 10 | Input Scan |
-| **Keypad Columns** | Pins 11, 12, 13, A0 | Input Scan |
-| **LCD I²C** | SDA (A4) & SCL (A5) | Display Communication |
+| **Arduino Uno** | Main Microcontroller | - |
+| **R307 Fingerprint Sensor** | Authentication | D2 (RX), D3 (TX) via `SoftwareSerial` |
+| **LCD 16x2 I2C** | User Display | I2C (A4/SDA, A5/SCL) |
+| **4x4 Keypad** | Input Interface | D7-D13, A0 |
+| **Green LED** | Access Granted Indicator | D4 |
+| **Red LED / Buzzer** | Access Denied Indicator | D5 / D6 |
 
-## 💻 Software & Libraries
+## 🚀 Setup and Installation Guide
 
-### Arduino (C++)
+### 1\. Arduino Setup (Firmware)
 
-* **IDE:** Arduino IDE
-* **Libraries:**
-    * `Wire.h` (Standard I²C library)
-    * `LiquidCrystal_I2C` (For 16x2 I²C LCD)
-    * `Adafruit_Fingerprint` (For R30x/R50x sensors)
-    * `SoftwareSerial` (Standard Arduino Library)
-    * `Keypad` (For 4x4 Keypad)
+1.  **Libraries:** Install the following libraries in your Arduino IDE:
+      * `Adafruit Fingerprint Sensor Library`
+      * `LiquidCrystal I2C`
+      * `Keypad`
+2.  **Upload Code:** Open `Arduino-Code/Biometric_Attendance_Arduino.ino` and upload it to your Arduino board.
 
-### PC (Python)
+### 2\. Python Setup (Automation Script)
 
-* **Version:** Python 3.x
-* **Libraries (Install via pip):**
-    * `pyserial` (`pip install pyserial`): To communicate with the Arduino's serial port.
-    * `pywhatkit` (`pip install pywhatkit`): To automate sending WhatsApp messages.
+The Python script runs on the PC connected via USB.
 
-## 🚀 Getting Started
-
-### Step 1: Arduino Setup and Upload
-
-1.  Install all required Arduino libraries listed above using the Library Manager.
-2.  Open the C++ code file (`your_arduino_code.ino`) in the Arduino IDE.
-3.  **Verify and Update Settings:** Ensure the `FP_BAUD` (Line 10) matches your sensor's setting, and if necessary, adjust the LCD I²C address (Line 21: `0x27` or `0x3F`).
-4.  Compile and upload the code to your Arduino board.
-
-### Step 2: Admin Enrollment
-
-1.  On the running device, press the **`#`** key to enter Admin Mode.
-2.  Enter the default PIN: **`1234`**, then press **`*`**.
-3.  Select **`1`** (Enroll).
-4.  Enter a new **ID** (e.g., `1`, `12`, etc. Max 127) and press **`*`**.
-5.  Follow the LCD prompts to place, remove, and replace the finger for two successful scans.
-
-### Step 3: Python Configuration and Run
-
-1.  Open the Python script (`your_python_code.py`).
-2.  **Configuration:** Update the following global variables:
-    * `ARDUINO_PORT`: Change `'COM6'` to your Arduino's actual serial port (e.g., `'COM3'`, `/dev/ttyACM0`).
-    * `WHATSAPP_NUMBER`: Enter the target WhatsApp number in **international format** (e.g., `+15551234567`).
-3.  Ensure you have an active internet connection and are logged into **WhatsApp Web** in your default browser.
-4.  Run the Python script from your terminal:
+1.  **Install Dependencies:**
     ```bash
-    python your_python_code.py
+    pip install pyserial pywhatkit pyautogui
     ```
+2.  **Configure Script:** Open `Python-Automation/biometric_automation.py` and modify the following constants:
+      * `ARDUINO_PORT = 'COMX'`: **Change this** to your Arduino's serial port (e.g., `'COM3'` or `'/dev/ttyACM0'`).
+      * `WHATSAPP_NUMBER = "+YYXXXXXXXXXX"`: Set the administrator's phone number (international format).
+3.  **Run the Script:**
+      * Ensure you are logged into **WhatsApp Web** in your default browser.
+      * Run the script from your terminal:
+        ```bash
+        python Python-Automation/biometric_automation.py
+        ```
 
-### Step 4: Testing and Validation
+## 🔄 Integration Protocol (Serial Communication)
 
-1.  The Arduino should display **"Place finger"**.
-2.  The Python script should display **"Listening for LOGIN: events from Arduino..."**.
-3.  Place one of the enrolled fingers on the sensor.
-4.  **Success:**
-    * Arduino displays **"Access Granted"** (Green LED on).
-    * Python console logs **"FROM ARDUINO: LOGIN:ID"** and **"Sending WhatsApp message..."**.
-    * A browser window opens briefly to send the notification.
-    * The user's entry is added to `attendance_log.csv`.
+The core functionality relies on the reliable communication between the two systems (as noted in `biometric presentation.pdf`, Page 9):
 
-## ⚙️ Core Communication Protocol
+1.  **Success Event:** Upon a successful fingerprint match, the Arduino sends a coded string via the USB Serial Port.
+2.  **Protocol Format:**
+    ```
+    LOGIN:ID
+    ```
+    (E.g., `LOGIN:7` if user ID 7 checks in).
+3.  **Python Action:** The Python script monitors the port, parses the line, and triggers the automated WhatsApp messaging sequence using the extracted `ID`.
 
-The entire system relies on a simple, consistent serial protocol:
+## 📝 Admin Operations (Keypad)
 
-| Sender | Event | Serial Output | Python Action |
-| :--- | :--- | :--- | :--- |
-| **Arduino** | Successful Fingerprint Match (ID 42) | `LOGIN:42` | Sends WhatsApp message and logs attendance. |
+The system is managed via the 4x4 keypad:
+
+| Action | Key Press | Description |
+| :--- | :--- | :--- |
+| **Enter Admin Mode** | Press **`#`** | Enters the PIN authentication screen. |
+| **Authenticate** | Type `1234` then press **`*`** | Enters the Admin Menu (Default PIN is `1234`). |
+| **Enroll Finger** | Press **`1`** | Prompts for a User ID, then guides the two-scan enrollment process. |
+| **Delete Finger** | Press **`2`** | Prompts for a User ID to be deleted from memory. |
+| **Exit Admin Mode** | Press **`0`** | Returns the system to `MODE_NORMAL` (listening for fingerprints). |
+
+## 💡 Future Enhancements
+
+Potential areas for future development (as suggested in `biometric presentation.pdf`, Page 10):
+
+  * Integrate a database (e.g., SQLite or MySQL) for more robust data storage.
+  * Develop automated daily/monthly attendance report generation.
+  * Add door-lock automation using a relay module.
+
+## ⚖️ License
+
+This project is licensed under the **MIT License**.
 
 ## 📂 Project Structure
 
