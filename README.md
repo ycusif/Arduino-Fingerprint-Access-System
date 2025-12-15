@@ -45,6 +45,8 @@ This hybrid system aims to enhance security, reduce human error, and provide sec
 ## 📸 Physical Prototype
 
 Below is a photograph of the final, assembled attendance system, showing the Arduino, Keypad, LCD, and Fingerprint Sensor connected.
+
+
 ![image alt](https://github.com/ycusif/Smart-Biometric-Attendance-System/blob/f8ef002b5c36ce931592ec0848f9890d409dbee0/WhatsApp%20Image%202025-12-15%20at%2011.17.40%20AM.jpeg)
 
 ## 🚀 Setup and Installation Guide
